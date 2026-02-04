@@ -4,6 +4,7 @@ import { SafeAreaView } from "react-native-safe-area-context";
 import {
   DebugControls,
   OfflineToggle,
+  ScheduleList,
   StatusBar as SyncStatusBar,
   TemperatureDisplay,
   TemperatureStepper,
@@ -44,6 +45,8 @@ export default function ThermostatScreen() {
           <OfflineToggle style={styles.section} />
 
           <DebugControls style={styles.section} />
+
+          <ScheduleList style={styles.section} />
         </View>
       </ScrollView>
     </SafeAreaView>

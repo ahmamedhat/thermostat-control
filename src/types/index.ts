@@ -35,10 +35,19 @@ export interface ApiSetTargetResponse {
   requestClientTs: number; // Echo back client timestamp for correlation
 }
 
+// Schedule types
+export interface Schedule {
+  id: string;
+  time: string;
+  targetTemp: number;
+  enabled: boolean;
+}
+
 // Redux state shape
 export interface ThermostatStoreState {
   thermostat: ThermostatState;
   pendingCommand: PendingCommand | null;
   syncStatus: SyncStatus;
   localIntentTs: number; // Timestamp of the most recent local user intent
+  schedules: Schedule[];
 }

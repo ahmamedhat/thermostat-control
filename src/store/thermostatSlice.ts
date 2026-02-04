@@ -2,8 +2,19 @@ import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import {
   ApiSetTargetResponse,
   ApiThermostatState,
+  Schedule,
   ThermostatStoreState,
 } from "../types";
+
+// Generate 24 mock schedules (one per hour)
+function generateMockSchedules(): Schedule[] {
+  return Array.from({ length: 24 }, (_, i) => ({
+    id: `schedule-${i}`,
+    time: `${i.toString().padStart(2, "0")}:00`,
+    targetTemp: 18 + Math.floor(Math.random() * 6), // 18-23°C
+    enabled: i >= 7 && i <= 22, // Enable daytime hours by default
+  }));
+}
 
 const initialState: ThermostatStoreState = {
   thermostat: {
@@ -19,6 +30,7 @@ const initialState: ThermostatStoreState = {
     lastSyncTs: null,
   },
   localIntentTs: 0,
+  schedules: generateMockSchedules(),
 };
 
 const thermostatSlice = createSlice({
@@ -160,6 +172,16 @@ const thermostatSlice = createSlice({
     clearError(state) {
       state.syncStatus.lastError = null;
     },
+
+    /**
+     * Toggle a schedule's enabled state
+     */
+    toggleSchedule(state, action: PayloadAction<string>) {
+      const schedule = state.schedules.find((s) => s.id === action.payload);
+      if (schedule) {
+        schedule.enabled = !schedule.enabled;
+      }
+    },
   },
 });
 
@@ -172,6 +194,7 @@ export const {
   setOnlineStatus,
   clearPending,
   clearError,
+  toggleSchedule,
 } = thermostatSlice.actions;
 
 export default thermostatSlice.reducer;
