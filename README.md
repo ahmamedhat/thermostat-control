@@ -1,50 +1,43 @@
-# Welcome to your Expo app 👋
+# Thermostat Control
 
-This is an [Expo](https://expo.dev) project created with [`create-expo-app`](https://www.npmjs.com/package/create-expo-app).
+Offline-first thermostat control demo built with Expo React Native, TypeScript, Redux, and Thunk.
 
-## Get started
+## Features
 
-1. Install dependencies
+- **Optimistic UI**: Temperature changes reflect immediately, regardless of network state
+- **Offline queue**: Commands queue automatically when offline, flush on reconnect
+- **Out-of-order protection**: Stale API responses won't overwrite newer user intent
+- **Conflict handling**: Server disagreements resolved with "client-intent-wins-if-newer" rule
+- **Debug tools**: Force conflict simulation for testing edge cases
 
-   ```bash
-   npm install
-   ```
-
-2. Start the app
-
-   ```bash
-   npx expo start
-   ```
-
-In the output, you'll find options to open the app in a
-
-- [development build](https://docs.expo.dev/develop/development-builds/introduction/)
-- [Android emulator](https://docs.expo.dev/workflow/android-studio-emulator/)
-- [iOS simulator](https://docs.expo.dev/workflow/ios-simulator/)
-- [Expo Go](https://expo.dev/go), a limited sandbox for trying out app development with Expo
-
-You can start developing by editing the files inside the **app** directory. This project uses [file-based routing](https://docs.expo.dev/router/introduction).
-
-## Get a fresh project
-
-When you're ready, run:
+## Running the app
 
 ```bash
-npm run reset-project
+npm install
+npm start
 ```
 
-This command will move the starter code to the **app-example** directory and create a blank **app** directory where you can start developing.
+Then press `i` for iOS simulator, `a` for Android emulator, or scan the QR code with Expo Go.
 
-## Learn more
+## Project Structure
 
-To learn more about developing your project with Expo, look at the following resources:
+```
+src/
+  components/     # UI components (display, stepper, status, toggles)
+  services/       # Mock API with latency/failure simulation
+  store/          # Redux slice, thunks, typed hooks
+  types/          # TypeScript interfaces
+app/
+  _layout.tsx     # Root layout with Redux Provider
+  index.tsx       # Main thermostat screen
+```
 
-- [Expo documentation](https://docs.expo.dev/): Learn fundamentals, or go into advanced topics with our [guides](https://docs.expo.dev/guides).
-- [Learn Expo tutorial](https://docs.expo.dev/tutorial/introduction/): Follow a step-by-step tutorial where you'll create a project that runs on Android, iOS, and the web.
+## Testing Scenarios
 
-## Join the community
+1. **Basic sync**: Adjust temperature with good connection, watch status indicator
+2. **Offline queue**: Enable offline mode, change temp, disable offline — queued command syncs
+3. **Failure recovery**: With ~15% failure rate, watch retry mechanism in action
+4. **Conflict simulation**: Tap "Force Conflict Once", then change temp — see how conflict resolves
+5. **Out-of-order**: Rapid temperature changes — UI stays consistent despite variable latency
 
-Join our community of developers creating universal apps.
-
-- [Expo on GitHub](https://github.com/expo/expo): View our open source platform and contribute.
-- [Discord community](https://chat.expo.dev): Chat with Expo users and ask questions.
+See `DECISIONS.md` for architectural trade-offs.
